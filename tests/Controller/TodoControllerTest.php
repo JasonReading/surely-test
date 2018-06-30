@@ -47,4 +47,20 @@ class TodoControllerTest extends WebTestCase
         $this->assertContains('"description":"Testing"', $client->getResponse()->getContent());
         $this->assertSame(201, $client->getResponse()->getStatusCode());
     }
+
+    public function testUpdate()
+    {
+        $client = static::createClient();
+
+        $client->request('PATCH', '/api/todo/' . $this->fixtures->getReference('todo.0')->getId(), ['todo' => ['completed' => true, ]]);
+        $this->assertContains('"description":"Hello World","completed":true', $client->getResponse()->getContent());
+        $this->assertSame(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDelete()
+    {
+        $client = static::createClient();
+        $client->request('DELETE', '/api/todo/' . $this->fixtures->getReference('todo.0')->getId());
+        $this->assertSame(204, $client->getResponse()->getStatusCode());
+    }
 }

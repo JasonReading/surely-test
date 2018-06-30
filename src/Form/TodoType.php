@@ -32,7 +32,6 @@ class TodoType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => Todo::class,
-                'method' => 'POST',
                 'csrf_protection' => false, // This is bad! Use some form of CSRF request header to solve this, there are bundles for it
             ]
         );
