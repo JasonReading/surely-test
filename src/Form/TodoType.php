@@ -21,7 +21,7 @@ class TodoType extends AbstractType
                 'constraints' => [new NotNull(), new Length(['max' => 255])],
             ])
             ->add('completed', CheckboxType::class, [
-                'required' => true,
+                'required' => false,
             ])
         ;
     }

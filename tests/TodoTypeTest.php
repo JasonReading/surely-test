@@ -1,13 +1,33 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Form;
 
-use PHPUnit\Framework\TestCase;
+use App\Form\TodoType;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class TodoTypeTest extends TestCase
+class TodoTypeTest extends WebTestCase
 {
-    public function testSomething()
+    /**
+     * @param $data
+     * @param $valid
+     * @dataProvider dataForTestForm
+     */
+    public function testForm($data, $valid)
     {
-        $this->assertTrue(true);
+        $client = static::createClient();
+        $container = $client->getContainer();
+        $form = $container->get('form.factory')->create(TodoType::class, null, ['csrf_protection' => false]); // Disable csrf for test only
+        $form->submit($data);
+        $this->assertSame($valid, $form->isSubmitted() && $form->isValid());
+    }
+
+    public function dataForTestForm()
+    {
+        yield [['description' => 'Hello', 'completed' => false, ], true];
+        yield [['description' => '', 'completed' => false, ], false];
+        yield [['completed' => false, ], false];
+        yield [['description' => \str_repeat('a', 266), 'completed' => false, ], false];
+        yield [[], false];
+        yield [['description' => 'Hello', 'completed' => false, 'extra' => 123, ], false];
     }
 }
