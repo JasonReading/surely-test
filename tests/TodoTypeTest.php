@@ -3,9 +3,9 @@
 namespace App\Tests\Form;
 
 use App\Form\TodoType;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class TodoTypeTest extends WebTestCase
+class TodoTypeTest extends KernelTestCase
 {
     /**
      * @param $data
@@ -14,8 +14,8 @@ class TodoTypeTest extends WebTestCase
      */
     public function testForm($data, $valid)
     {
-        $client = static::createClient();
-        $container = $client->getContainer();
+        $kernel = static::bootKernel();
+        $container = $kernel->getContainer();
         $form = $container->get('form.factory')->create(TodoType::class, null, ['csrf_protection' => false]); // Disable csrf for test only
         $form->submit($data);
         $this->assertSame($valid, $form->isSubmitted() && $form->isValid());
