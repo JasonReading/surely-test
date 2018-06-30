@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TodoRepository")
@@ -13,21 +14,25 @@ class Todo
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"list","detail"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups({"list","detail"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Serializer\Groups({"list","detail"})
      */
     private $completed;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"list","detail"})
      */
     private $createdDate;
 
