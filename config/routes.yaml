@@ -1,3 +1,5 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: FrameworkBundle:Template:template
+    defaults:
+        template: frontend/index.html.twig
