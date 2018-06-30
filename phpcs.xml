@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="my-psr">
+    <rule ref="PSR2"/>
+    <file>src</file>
+
+    <!-- Ignore the line length unless it's excessive -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="256"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+</ruleset>

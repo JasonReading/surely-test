@@ -19,5 +19,3 @@ class TodoController extends Controller
         return $this->handleView($view);
     }
 }
-
-// alias xunit='PHP_IDE_CONFIG="serverName=debug" php72 -dxdebug.remote_enable=1 -dxdebug.remote_host=127.0.0.1 -dxdebug.remote_port=12345 -dxdebug.idekey=PHPSTORM -dxdebug.remote_autostart=1 bin/phpunit'

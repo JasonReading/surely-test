@@ -16,20 +16,23 @@ class TodoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description', TextType::class, [
-                'required' => true,
-                'constraints' => [new NotNull(), new Length(['max' => 255])],
-            ])
-            ->add('completed', CheckboxType::class, [
-                'required' => false,
-            ])
-        ;
+            ->add(
+                'description',
+                TextType::class,
+                [
+                    'required' => true,
+                    'constraints' => [new NotNull(), new Length(['max' => 255])],
+                ]
+            )
+            ->add('completed', CheckboxType::class, ['required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => Todo::class,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => Todo::class,
+            ]
+        );
     }
 }
