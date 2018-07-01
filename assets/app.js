@@ -18,20 +18,50 @@ angular
         }
     })
     .component('todoItem', {
-        template: `<div>
+        template: `
+<div ng-dblclick="$ctrl.edit($ctrl.item)">
+    <form ng-submit="$ctrl.finishEdit($ctrl.editModel)" ng-if="$ctrl.editing">
+        <input type="text" ng-model="$ctrl.editModel.description" required>
+        <button type="submit">Save</button>
+    </form>
+    <div ng-if="!$ctrl.editing">
         <span ng-class="{done: $ctrl.item.completed}">{{$ctrl.item.description }}</span>
         <button ng-click="$ctrl.toggleDone($ctrl.item)">{{$ctrl.item.completed?'↺':'✓'}}</button>  
         <button ng-click="$ctrl.delete($ctrl.item)">Delete </button>  
-        <loader-thing loading="$ctrl.deleting || $ctrl.toggling"></loader-thing>
-        </div>`,
+    </div>
+    <loader-thing loading="$ctrl.deleting || $ctrl.toggling || $ctrl.saving"></loader-thing>
+</div>`,
         bindings: {
             item: '='
         },
         controller: function ($scope, Todo) {
             let ctrl = this;
 
+            ctrl.error = null;
+
+            ctrl.editing = false;
+            ctrl.editModel = {};
+            ctrl.edit = (item) => {
+                ctrl.editing = true;
+                ctrl.editModel = {
+                    description: item.description,
+                    completed: item.completed
+                };
+            };
+            ctrl.finishEdit = (data) => {
+                ctrl.saving = true;
+                Todo.update({id: ctrl.item.id, todo: data}).$promise
+                    .then(e => {
+                        ctrl.item.description = e.description;
+                        ctrl.item.completed = e.completed;
+                    })
+                    .catch(e => ctrl.error = e)
+                    .finally(e => ctrl.editing = ctrl.saving = false);
+            };
+
             ctrl.deleting = false;
             ctrl.toggling = false;
+            ctrl.saving = false;
 
             ctrl.delete = (item) => {
                 ctrl.deleting = true;
@@ -53,6 +83,7 @@ angular
     .component('todoApp', {
         template: `
         <h1>Todo:</h1>
+        <p>Double click an item to edit</p>
         
         <loader-thing loading="$ctrl.loading"></loader-thing>
         <ul>
@@ -88,7 +119,7 @@ angular
                     .finally(e => {
                         ctrl.adding = false;
                         ctrl.newTask = '';
-                    })
+                    });
             };
 
             $scope.$on('ITEM_DELETED', (e, item) => {
