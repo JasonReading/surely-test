@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Todo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,6 +25,10 @@ class TodoType extends AbstractType
                     'constraints' => [new NotNull(), new Length(['max' => 255])],
                 ]
             )
+            ->add('dueDate', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+            ])
             ->add('completed', CheckboxType::class, ['required' => false,]);
     }
 

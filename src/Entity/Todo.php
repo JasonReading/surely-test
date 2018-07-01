@@ -36,6 +36,13 @@ class Todo
      */
     private $createdDate;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Groups({"list","detail"})
+     * @Serializer\Type("DateTime<'Y-m-d'>")
+     */
+    private $dueDate;
+
     public function __construct()
     {
         $this->completed = false;
@@ -79,6 +86,18 @@ class Todo
     public function setCreatedDate(\DateTimeInterface $createdDate): self
     {
         $this->createdDate = $createdDate;
+
+        return $this;
+    }
+
+    public function getDueDate(): ?\DateTimeInterface
+    {
+        return $this->dueDate;
+    }
+
+    public function setDueDate(\DateTimeInterface $dueDate = null): self
+    {
+        $this->dueDate = $dueDate;
 
         return $this;
     }

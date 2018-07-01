@@ -22,10 +22,11 @@ angular
 <div ng-dblclick="$ctrl.edit($ctrl.item)">
     <form ng-submit="$ctrl.finishEdit($ctrl.editModel)" ng-if="$ctrl.editing">
         <input type="text" ng-model="$ctrl.editModel.description" required>
+        <input type="date" ng-model="$ctrl.editModel.dueDate" placeholder="yyyy-MM-dd">
         <button type="submit">Save</button>
     </form>
     <div ng-if="!$ctrl.editing">
-        <span ng-class="{done: $ctrl.item.completed}">{{$ctrl.item.description }}</span>
+        <span ng-class="{done: $ctrl.item.completed}">{{$ctrl.item.description }} <small ng-if="$ctrl.item.dueDate">(Due: {{$ctrl.item.dueDate}})</small></span>
         <button ng-click="$ctrl.toggleDone($ctrl.item)">{{$ctrl.item.completed?'↺':'✓'}}</button>  
         <button ng-click="$ctrl.delete($ctrl.item)">Delete </button>  
     </div>
@@ -43,10 +44,20 @@ angular
             ctrl.editModel = {};
             ctrl.edit = (item) => {
                 ctrl.editing = true;
+
                 ctrl.editModel = {
                     description: item.description,
-                    completed: item.completed
+                    completed: item.completed,
                 };
+
+                console.log(item);
+                if (item.dueDate) {
+                    console.log(item, ctrl.editModel, new Date(item.dueDate));
+
+                    ctrl.editModel.dueDate = new Date(item.dueDate);
+                }
+
+
             };
             ctrl.finishEdit = (data) => {
                 ctrl.saving = true;
@@ -54,9 +65,12 @@ angular
                     .then(e => {
                         ctrl.item.description = e.description;
                         ctrl.item.completed = e.completed;
+                        ctrl.item.dueDate = e.dueDate;
                     })
                     .catch(e => ctrl.error = e)
-                    .finally(e => ctrl.editing = ctrl.saving = false);
+                    .finally(e => {
+                        ctrl.editing = ctrl.saving = false
+                    });
             };
 
             ctrl.deleting = false;
@@ -68,14 +82,18 @@ angular
                 Todo.delete({id: item.id}).$promise
                     .then(e => $scope.$emit('ITEM_DELETED', item))
                     .catch(e => $scope.$emit('FORM_ERROR', e))
-                    .finally(e => ctrl.deleting = false);
+                    .finally(e => {
+                        ctrl.deleting = false
+                    });
             };
             ctrl.toggleDone = (item) => {
                 ctrl.toggling = true;
                 Todo.update({id: item.id, todo: {completed: !item.completed}}).$promise
                     .then(e => item.completed = e.completed)
                     .catch(e => $scope.$emit('FORM_ERROR', e))
-                    .finally(e => ctrl.toggling = false);
+                    .finally(e => {
+                        ctrl.toggling = false
+                    });
             };
         }
 
@@ -91,7 +109,8 @@ angular
                 <todo-item item="item"></todo-item>
             </li>
         </ul>
-        <form ng-submit="$ctrl.addItem($ctrl.newTask)"><input type="text" ng-model="$ctrl.newTask" placeholder="Task" required><button type="submit">+</button></form>
+        <form ng-submit="$ctrl.addItem($ctrl.newTask)"><input type="text" ng-model="$ctrl.newTask.description" placeholder="Task" required>
+        <input type="date" ng-model="$ctrl.newTask.dueDate"><button type="submit">+</button></form>
         `,
         controller: function ($scope, $element, $attrs, Todo) {
             var ctrl = this;
@@ -100,25 +119,27 @@ angular
             ctrl.loading = true;
             ctrl.adding = false;
             ctrl.errors = [];
-            ctrl.newTask = '';
+            ctrl.newTask = {};
 
             // Load list
             Todo.query().$promise
                 .then(d => ctrl.list = d)
                 .catch(e => ctrl.errors = e)
-                .finally(e => ctrl.loading = false);
+                .finally(e => {
+                    ctrl.loading = false
+                });
 
 
-            ctrl.addItem = text => {
+            ctrl.addItem = formData => {
                 ctrl.adding = true;
-                Todo.save({todo: {description: text}}).$promise
+                Todo.save({todo: formData}).$promise
                     .then(d => {
                         $scope.$emit('ITEM_ADDED', d);
                     })
                     .catch(e => ctrl.errors = e)
                     .finally(e => {
                         ctrl.adding = false;
-                        ctrl.newTask = '';
+                        ctrl.newTask = {};
                     });
             };
 
