@@ -28,13 +28,14 @@ class TodoControllerTest extends WebTestCase
                 'id' => 1,
                 'description' => 'Hello World',
                 'completed' => false,
-                'created_date' => '2018-01-01T00:00:00+00:00',
+                'createdDate' => '2018-01-01T00:00:00+00:00',
+                'dueDate' => '2019-01-01',
             ],
             [
                 'id' => 2,
                 'description' => 'Goodbye, old friend',
                 'completed' => true,
-                'created_date' => '2018-02-01T00:00:00+00:00',
+                'createdDate' => '2018-02-01T00:00:00+00:00',
             ],
         ], $data);
     }

@@ -24,6 +24,7 @@ class TodoTypeTest extends KernelTestCase
     public function dataForTestForm()
     {
         yield [['description' => 'Hello', 'completed' => false, ], true];
+        yield [['description' => 'Hello', 'completed' => false, 'dueDate' => '2019-01-01'], true];
         yield [['description' => '', 'completed' => false, ], false];
         yield [['completed' => false, ], false];
         yield [['description' => \str_repeat('a', 266), 'completed' => false, ], false];

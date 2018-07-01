@@ -17,6 +17,7 @@ class LoadTodoFixtures extends AbstractFixture
         $todo->setCompleted(false);
         $todo->setDescription('Hello World');
         $todo->setCreatedDate(new \DateTime('2018-01-01 00:00:00'));
+        $todo->setDueDate(new \DateTime('2019-01-01 00:00:00'));
         $manager->persist($todo);
         $this->setReference('todo.0', $todo);
         $manager->flush();
