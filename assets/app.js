@@ -104,7 +104,7 @@ angular
         <p>Double click an item to edit</p>
         
         <loader-thing loading="$ctrl.loading"></loader-thing>
-        <ul>
+        <ul class="todo-list">
             <li ng-repeat="item in $ctrl.list track by item.id">
                 <todo-item item="item"></todo-item>
             </li>
